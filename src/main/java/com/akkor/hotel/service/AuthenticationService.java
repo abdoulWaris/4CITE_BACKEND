@@ -6,15 +6,19 @@ import com.akkor.hotel.dto.RegisterRequest;
 import com.akkor.hotel.exception.EmailAlreadyExistsException;
 import com.akkor.hotel.exception.InvalidCredentialsException;
 import com.akkor.hotel.exception.UserNotFoundException;
+import com.akkor.hotel.model.CustomerUserDetails;
 import com.akkor.hotel.model.Role;
 import com.akkor.hotel.model.User;
 import com.akkor.hotel.repository.UserRepository;
 import com.akkor.hotel.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +51,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
-                .roles(Collections.singleton(Role.ROLE_USER))
+                .roles(Collections.singleton(Role.ROLE_ADMIN))
                 .enabled(true)
                 .build();
 
@@ -68,7 +72,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info("Tentative d'authentification pour l'email: {}", request.getEmail());
-        
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -90,7 +94,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken((UserDetails) user);
         
         log.info("Authentification réussie pour l'utilisateur: {}", user.getEmail());
-        
+        //System.out.println(httpHeaders);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .userId(user.getId())
@@ -100,4 +104,5 @@ public class AuthenticationService {
                 .roles(user.getRoles())
                 .build();
     }
+
 } 

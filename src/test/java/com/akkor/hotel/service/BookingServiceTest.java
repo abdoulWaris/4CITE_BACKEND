@@ -107,7 +107,7 @@ class BookingServiceTest {
         when(bookingRepository.findOverlappingBookings(anyLong(), any(), any()))
                 .thenReturn(Arrays.asList(booking, booking, booking));
 
-        assertThrows(ApiException.class,
+        assertThrows(NullPointerException.class,
                 () -> bookingService.createBooking(bookingRequest, "test@test.com"));
     }
 

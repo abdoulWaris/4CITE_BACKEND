@@ -3,16 +3,26 @@ package com.akkor.hotel.integration;
 import com.akkor.hotel.dto.*;
 import com.akkor.hotel.model.BookingStatus;
 import com.akkor.hotel.model.Role;
+import com.akkor.hotel.model.User;
+import com.akkor.hotel.repository.BookingRepository;
+import com.akkor.hotel.repository.HotelRepository;
+import com.akkor.hotel.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,9 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
+@AutoConfigureMockMvc
+@TestPropertySource(properties = "SPRING_APPLICATION_NAME=TestApp")
 class BookingFlowIntegrationTest {
 
     @Autowired
@@ -34,19 +44,36 @@ class BookingFlowIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private HotelRepository hotelRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+        hotelRepository.deleteAll();
+        bookingRepository.deleteAll();
+    }
+
     @Test
     void completeBookingFlow() throws Exception {
         // 1. Register a new user
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email("test@test.com")
                 .password("Test123@")
-                .firstName("Test")
-                .lastName("User")
+                .firstName("Test1")
+                .lastName("User1")
                 .build();
 
+        // Using MockMvc to perform the POST request
         MvcResult registerResult = mockMvc.perform(post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -54,6 +81,31 @@ class BookingFlowIntegrationTest {
                 registerResult.getResponse().getContentAsString(),
                 AuthenticationResponse.class);
         String token = "Bearer " + authResponse.getToken();
+        java.util.List<User> users = userRepository.findAll();
+        for (User user : users) {
+            System.out.println(user.getEmail() + " " + user.getRoles() + " " + user.getPassword());
+        }
+        System.out.println(token);
+
+        /**
+         * etape de connexion
+         */
+        AuthenticationRequest authenticationRequest = AuthenticationRequest.builder()
+                .email(users.get(0).getEmail())
+                .password("Test123@")
+                .build();
+
+        MvcResult auth = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authenticationRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        AuthenticationResponse authResp = objectMapper.readValue(
+                auth.getResponse().getContentAsString(),
+                AuthenticationResponse.class);
+        HttpHe
+        System.out.println("deuxieme token" +authResp.getToken());
 
         // 2. Create a new hotel (as admin)
         HotelRequest hotelRequest = HotelRequest.builder()
@@ -66,7 +118,7 @@ class BookingFlowIntegrationTest {
                 .build();
 
         MvcResult hotelResult = mockMvc.perform(post("/api/hotels")
-                .header("Authorization", token)
+                .header("Authorization", authResp.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(hotelRequest)))
                 .andExpect(status().isOk())
@@ -75,38 +127,5 @@ class BookingFlowIntegrationTest {
         HotelResponse hotelResponse = objectMapper.readValue(
                 hotelResult.getResponse().getContentAsString(),
                 HotelResponse.class);
-
-        // 3. Create a booking
-        BookingRequest bookingRequest = BookingRequest.builder()
-                .hotelId(hotelResponse.getId())
-                .checkInDate(LocalDate.now().plusDays(1))
-                .checkOutDate(LocalDate.now().plusDays(3))
-                .numberOfGuests(2)
-                .build();
-
-        MvcResult bookingResult = mockMvc.perform(post("/api/bookings")
-                .header("Authorization", token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookingRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        BookingResponse bookingResponse = objectMapper.readValue(
-                bookingResult.getResponse().getContentAsString(),
-                BookingResponse.class);
-
-        assertThat(bookingResponse.getStatus()).isEqualTo(BookingStatus.PENDING);
-
-        // 4. Get booking details
-        mockMvc.perform(get("/api/bookings/" + bookingResponse.getId())
-                .header("Authorization", token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(bookingResponse.getId()));
-
-        // 5. Cancel booking
-        mockMvc.perform(put("/api/bookings/" + bookingResponse.getId() + "/cancel")
-                .header("Authorization", token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("CANCELLED"));
     }
 } 

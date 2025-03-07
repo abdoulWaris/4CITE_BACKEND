@@ -1,20 +1,20 @@
 spring:
   application:
-    name: Akkordhotel
+    name: ${SPRING_APPLICATION_NAME}
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/${spring.application.name}
-    username: root
-    password: d1ditSucce$$55
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_APPLICATION_NAME}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    show-sql: ${SPRING_JPA_SHOW_SQL}
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
   h2:
     console:
       enabled: true
@@ -44,5 +44,5 @@ springdoc:
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 86400000 # 24 heures en millisecondes 
+      secret-key: ${SPRING_JWT_SECRET_TOKEN}
+      expiration: 86400000 # 24 heures en millisecondes
