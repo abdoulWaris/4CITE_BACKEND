@@ -104,7 +104,6 @@ class BookingFlowIntegrationTest {
         AuthenticationResponse authResp = objectMapper.readValue(
                 auth.getResponse().getContentAsString(),
                 AuthenticationResponse.class);
-        HttpHe
         System.out.println("deuxieme token" +authResp.getToken());
 
         // 2. Create a new hotel (as admin)

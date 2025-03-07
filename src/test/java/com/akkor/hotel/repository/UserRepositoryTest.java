@@ -23,7 +23,7 @@ class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
-@BeforeEach
+    @BeforeEach
     public void setUp() {
         // Créer un utilisateur de test
         User user = User.builder()
