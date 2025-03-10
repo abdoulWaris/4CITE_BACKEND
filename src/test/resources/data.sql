@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS bookings;
 
 CREATE TABLE users
 (
@@ -67,7 +68,7 @@ CREATE TABLE IF NOT EXISTS hotels
     );
 
 -- Create the bookings table in H2
-CREATE TABLE bookings
+CREATE TABLE IF NOT EXISTS bookings
 (
     id               BIGINT AUTO_INCREMENT PRIMARY KEY,
     check_in_date    DATE           NOT NULL,
