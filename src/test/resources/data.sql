@@ -138,10 +138,10 @@ CREATE TABLE IF NOT EXISTS bookings
 
 
 INSERT INTO users (id, email, enabled, first_name, last_name, password, phone_number)
-VALUES (2, 'john.doe@example.com', TRUE, 'John', 'Doe', 'password123', NULL),
-       (3, 'jane.smith@example.com', TRUE, 'Jane', 'Smith', '123456', NULL),
-       (4, 'mike.johnson@example.com', TRUE, 'Mike', 'Johnson', 'mypassword', NULL),
-       (5, 'susan.williams@example.com', TRUE, 'Susan', 'Williams', 'hello123', NULL);
+VALUES (1, 'john.doe@example.com', TRUE, 'John', 'Doe', 'password123', NULL),
+       (2, 'jane.smith@example.com', TRUE, 'Jane', 'Smith', '123456', NULL),
+       (3, 'mike.johnson@example.com', TRUE, 'Mike', 'Johnson', 'mypassword', NULL),
+       (4, 'susan.williams@example.com', TRUE, 'Susan', 'Williams', 'hello123', NULL);
 INSERT INTO hotels (active, address, base_price, city, contact_email, contact_phone, country, description, name,
                     star_rating, total_rooms)
 VALUES (TRUE, '123 Main St, Downtown', 150.00, 'Paris', 'contact@hotelparis.com', '123-456-7890', 'France',
@@ -155,7 +155,7 @@ VALUES (TRUE, '123 Main St, Downtown', 150.00, 'Paris', 'contact@hotelparis.com'
 
 INSERT INTO bookings (check_in_date, check_out_date, created_at, number_of_guests, special_requests, status,
                       total_price, updated_at, hotel_id, user_id)
-VALUES ('2025-03-10', '2025-03-12', '2025-03-01 10:00:00', 2, 'No special requests', 'PENDING', 200.00, NULL, 1, 2),
+VALUES ('2025-03-10', '2025-03-12', '2025-03-01 10:00:00', 2, 'No special requests', 'PENDING', 200.00, NULL, 1, 1),
        ('2025-03-15', '2025-03-18', '2025-03-02 11:00:00', 3, 'Late check-in requested', 'CONFIRMED', 450.00,
-        '2025-03-05 14:00:00', 2, 3),
-       ('2025-03-20', '2025-03-22', '2025-03-03 09:00:00', 1, NULL, 'CANCELLED', 100.00, NULL, 3, 4);
+        '2025-03-05 14:00:00', 2, 2),
+       ('2025-03-20', '2025-03-22', '2025-03-03 09:00:00', 1, NULL, 'CANCELLED', 100.00, NULL, 3, 3);
