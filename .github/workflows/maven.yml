@@ -25,7 +25,7 @@ jobs:
       with:
         node_version: '22.14.x'
     - name: Run the Maven verify phase
-      run: mvn -clean install
+      run: mvn clean install
   test:
     runs-on: unbuntu-latest
     needs: build
