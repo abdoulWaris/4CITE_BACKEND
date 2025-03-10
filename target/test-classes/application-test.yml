@@ -1,13 +1,13 @@
 spring:
   application:
-    name: ${SPRING_APPLICATION_NAME}.
+    name: testApp
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     initialize: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -19,7 +19,7 @@ spring:
       data-locations: classpath:data.sql
 
 jwt:
-  secret: ${SPRING_JWT_SECRET_TOKEN}
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000
 
 server:

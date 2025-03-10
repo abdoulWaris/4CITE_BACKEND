@@ -35,7 +35,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@TestPropertySource(properties = "SPRING_APPLICATION_NAME=TestApp")
+@TestPropertySource("classpath:application-test.yml")
+@TestPropertySource(properties = "SPRING_JWT_SECRET_TOKEN=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970")
 class BookingFlowIntegrationTest {
 
     @Autowired
@@ -105,7 +106,7 @@ class BookingFlowIntegrationTest {
                 auth.getResponse().getContentAsString(),
                 AuthenticationResponse.class);
         System.out.println("deuxieme token" +authResp.getToken());
-/*
+
         // 2. Create a new hotel (as admin)
         HotelRequest hotelRequest = HotelRequest.builder()
                 .name("Test Hotel")
@@ -125,6 +126,6 @@ class BookingFlowIntegrationTest {
 
         HotelResponse hotelResponse = objectMapper.readValue(
                 hotelResult.getResponse().getContentAsString(),
-                HotelResponse.class);*/
+                HotelResponse.class);
     }
 } 

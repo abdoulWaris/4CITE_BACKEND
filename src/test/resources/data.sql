@@ -1,6 +1,8 @@
-DROP TABLE IF EXISTS user_roles;
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users
 (
@@ -70,20 +72,70 @@ CREATE TABLE IF NOT EXISTS hotels
 -- Create the bookings table in H2
 CREATE TABLE IF NOT EXISTS bookings
 (
-    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
-    check_in_date    DATE           NOT NULL,
-    check_out_date   DATE           NOT NULL,
-    created_at       TIMESTAMP(6)   NOT NULL,
-    number_of_guests INT            NOT NULL,
-    special_requests VARCHAR(255),
-    status           VARCHAR(255)   NOT NULL CHECK (status IN ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'REFUNDED')),
-    total_price      DECIMAL(38, 2) NOT NULL,
-    updated_at       TIMESTAMP(6),
-    hotel_id         BIGINT         NOT NULL,
-    user_id          BIGINT         NOT NULL,
-    CONSTRAINT FK_hotel FOREIGN KEY (hotel_id) REFERENCES hotels (id),
-    CONSTRAINT FK_user FOREIGN KEY (user_id) REFERENCES users (id)
-);
+    id
+    BIGINT
+    AUTO_INCREMENT
+    PRIMARY
+    KEY,
+    check_in_date
+    DATE
+    NOT
+    NULL,
+    check_out_date
+    DATE
+    NOT
+    NULL,
+    created_at
+    TIMESTAMP
+(
+    6
+) NOT NULL,
+    number_of_guests INT NOT NULL,
+    special_requests VARCHAR
+(
+    255
+),
+    status VARCHAR
+(
+    255
+) NOT NULL CHECK
+(
+    status
+    IN
+(
+    'PENDING',
+    'CONFIRMED',
+    'CANCELLED',
+    'COMPLETED',
+    'REFUNDED'
+)),
+    total_price DECIMAL
+(
+    38,
+    2
+) NOT NULL,
+    updated_at TIMESTAMP
+(
+    6
+),
+    hotel_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT FK_hotel FOREIGN KEY
+(
+    hotel_id
+) REFERENCES hotels
+(
+    id
+),
+    CONSTRAINT FK_user FOREIGN KEY
+(
+    user_id
+) REFERENCES users
+(
+    id
+)
+    );
+
 
 INSERT INTO users (id, email, enabled, first_name, last_name, password, phone_number)
 VALUES (1, 'john.doe@example.com', TRUE, 'John', 'Doe', 'password123', NULL),
@@ -101,8 +153,9 @@ VALUES (TRUE, '123 Main St, Downtown', 150.00, 'Paris', 'contact@hotelparis.com'
        (TRUE, '321 Birch Ln, Suburbia', 80.00, 'London', 'reservations@hotellondon.com', '333-444-5555', 'UK',
         'A cozy hotel located in a quiet suburban area', 'Hotel London', 3, 60);
 
-INSERT INTO bookings (check_in_date, check_out_date, created_at, number_of_guests, special_requests, status, total_price, updated_at, hotel_id, user_id)
-VALUES
-    ('2025-03-10', '2025-03-12', '2025-03-01 10:00:00', 2, 'No special requests', 'PENDING', 200.00, NULL, 1, 1),
-    ('2025-03-15', '2025-03-18', '2025-03-02 11:00:00', 3, 'Late check-in requested', 'CONFIRMED', 450.00, '2025-03-05 14:00:00', 2, 2),
-    ('2025-03-20', '2025-03-22', '2025-03-03 09:00:00', 1, NULL, 'CANCELLED', 100.00, NULL, 3, 3);
+INSERT INTO bookings (check_in_date, check_out_date, created_at, number_of_guests, special_requests, status,
+                      total_price, updated_at, hotel_id, user_id)
+VALUES ('2025-03-10', '2025-03-12', '2025-03-01 10:00:00', 2, 'No special requests', 'PENDING', 200.00, NULL, 1, 1),
+       ('2025-03-15', '2025-03-18', '2025-03-02 11:00:00', 3, 'Late check-in requested', 'CONFIRMED', 450.00,
+        '2025-03-05 14:00:00', 2, 2),
+       ('2025-03-20', '2025-03-22', '2025-03-03 09:00:00', 1, NULL, 'CANCELLED', 100.00, NULL, 3, 3);
