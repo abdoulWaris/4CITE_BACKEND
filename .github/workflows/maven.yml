@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-  schedule:
-  - cron: "0 5 * * 1-5"
 
 jobs:
   build:
@@ -27,8 +25,29 @@ jobs:
       with:
         node_version: '22.14.x'
     - name: Run the Maven verify phase
-      run: mvn --batch-mode --update-snapshots verify
+      run: mvn -clean install
+  test:
+    runs-on: unbuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Test Report
+      uses: actions/upload-artifact@v3
+      if: success() || failure()
+      with:
+          name: SpringBoot Report               
+          path: target/site/serenity/
     
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-  #  - name: Update dependency graph
-   #   uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+  deploy:
+     runs-on: ubuntu-lastest
+     needs: test
+
+     steps:
+     - name: Checkout repository
+       uses: actions/checkout@v4
+
+     - name: Deploy the solution
+       run: echo "Succesfully deploy, thanks!!!!"
