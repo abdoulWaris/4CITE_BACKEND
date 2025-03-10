@@ -27,7 +27,7 @@ jobs:
     - name: Run the Maven verify phase
       run: mvn clean install
   test:
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
