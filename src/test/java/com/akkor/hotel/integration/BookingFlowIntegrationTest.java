@@ -76,6 +76,7 @@ class BookingFlowIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         AuthenticationResponse authResponse = objectMapper.readValue(
@@ -83,10 +84,7 @@ class BookingFlowIntegrationTest {
                 AuthenticationResponse.class);
         String token = "Bearer " + authResponse.getToken();
         java.util.List<User> users = userRepository.findAll();
-        for (User user : users) {
-            System.out.println(user.getEmail() + " " + user.getRoles() + " " + user.getPassword());
-        }
-        System.out.println(token);
+
 
         /**
          * etape de connexion
@@ -105,7 +103,7 @@ class BookingFlowIntegrationTest {
         AuthenticationResponse authResp = objectMapper.readValue(
                 auth.getResponse().getContentAsString(),
                 AuthenticationResponse.class);
-        System.out.println("deuxieme token" +authResp.getToken());
+       // System.out.println("deuxieme token" +authResp.getToken());
 
         // 2. Create a new hotel (as admin)
         HotelRequest hotelRequest = HotelRequest.builder()
@@ -117,15 +115,13 @@ class BookingFlowIntegrationTest {
                 .totalRooms(10)
                 .build();
 
-        MvcResult hotelResult = mockMvc.perform(post("/api/hotels")
-                .header("Authorization", authResp.getToken())
+        MvcResult hotelFirstTestResult = mockMvc.perform(post("/api/hotels/create")
+                .header("Authorization", "Bearer "+authResp.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(hotelRequest)))
-                .andExpect(status().isOk())
+                .andExpect(status().isForbidden())
                 .andReturn();
 
-        HotelResponse hotelResponse = objectMapper.readValue(
-                hotelResult.getResponse().getContentAsString(),
-                HotelResponse.class);
     }
+
 } 

@@ -39,6 +39,7 @@ public class HotelController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HotelResponse> createHotel(@RequestHeader("Authorization") String token,
             @RequestBody @Valid HotelRequest request) {
+        System.out.println(token);
         return ResponseEntity.ok(hotelService.createHotel(request));
     }
 

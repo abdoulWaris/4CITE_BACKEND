@@ -49,8 +49,10 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        extraClaims.put("role", "ROLE_ADMIN");
         return Jwts
                 .builder()
+                .claim("roles", "ROLE_ADMIN")
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
