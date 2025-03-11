@@ -43,9 +43,10 @@ SPRING_JWT_SECRET_TOKEN= un secret toke de votre choix(ex:404E635266556A586E3272
 ## Utilisation
 
 1. Démarrez le serveur backend.
-2. utilise ##mvn clean install pour lancer tout les tests
-3. Utilisez des outils comme Postman pour interagir avec les API disponibles.
-4. Consultez la documentation des API pour plus de détails sur les endpoints disponibles.
+2. utilise pour lancer tout les test
+   ```sh mvn clean install ``` 
+4. Utilisez des outils comme Postman pour interagir avec les API disponibles.
+5. Consultez la documentation des API pour plus de détails sur les endpoints disponibles.
 
 ## Contribuer
 
