@@ -25,6 +25,7 @@ Repo pour le projet de test et d'intégration d'un projet de gestion d'hôtels (
     cd 4CITE_BACKEND
     ```
 3.Selon votre IDE configurer votre .env comme ceci:
+```sh
 SPRING_APPLICATION_NAME= AkkordHotel
 SPRING_DATASOURCE_URL=url_base_de_donnée
 SPRING_DATASOURCE_USERNAME= username
@@ -35,6 +36,7 @@ SPRING_JPA_SHOW_SQL=true
 SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
 SPRING_SWAGGERSOURCE_PATH=/swagger-ui.html
 SPRING_JWT_SECRET_TOKEN= un secret toke de votre choix(ex:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970)
+```
 4. Compilez et exécutez le projet Java avec votre IDE préféré ou en utilisant Maven/Gradle.
 5. lancer la dans votre de donné créez un schéma AkkordHotel et lancer l'application
 
