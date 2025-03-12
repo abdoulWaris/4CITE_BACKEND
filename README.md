@@ -47,6 +47,7 @@ SPRING_JWT_SECRET_TOKEN= un secret toke de votre choix(ex:404E635266556A586E3272
    ```sh mvn clean install ``` 
 4. Utilisez des outils comme Postman pour interagir avec les API disponibles.
 5. Consultez la documentation des API pour plus de détails sur les endpoints disponibles.
+6. Accedez à swagger http://localhost:8080/api/swagger-ui.html
 
 ## Contribuer
 
